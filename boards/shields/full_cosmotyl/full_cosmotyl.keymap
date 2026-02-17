@@ -30,9 +30,9 @@
                 &kp TAB   &kp Q  &kp W    &kp E    &kp R     &kp T    &kp PG_UP              &tog LOWER &kp Y     &kp U     &kp I     &kp O     &kp P     &kp BLSH
                 &kp LCTRL &kp A  &kp S    &kp D    &kp F     &kp G    &kp PG_DW              &tog RISE  &kp H     &kp J     &kp K     &kp L     &kp SEMI  &kp APOS
                 &kp LSHFT &kp Z  &kp X    &kp C    &kp V     &kp B    &kp LBKT               &kp RBKT   &kp N     &kp M     &kp COMMA &kp DOT   &kp FSLH  &kp RSHFT
-                                 &KP LALT &KP LGUI                                                                         &kp RALT  &kp RGUI
-                                                   &kp SPACE &kp BSPC &kp NUHS               &kp HOME   &kp END   &KP ENTER
-                                                             &kp PIPE &kp INS                &sl RISE   &kp LOWER
+                                 &kp LALT &kp LGUI                                                                         &kp RALT  &kp RGUI
+                                                  &kp SPACE &kp BSPC &kp NUHS               &kp HOME   &kp END   &kp ENTER
+                                                            &kp PIPE &kp INS                &sl RISE   &kp LOWER
             >;
         };
         lower_layer {
@@ -52,9 +52,9 @@
                 &kp TAB   &kp Q  &kp W    &kp E    &kp R     &kp T    &kp PG_UP              &tog LOWER &kp Y     &kp U     &kp I     &kp O     &kp P     &kp BLSH
                 &kp LCTRL &kp A  &kp S    &kp D    &kp F     &kp G    &kp PG_DW              &tog RISE  &kp H     &kp J     &kp K     &kp L     &kp SEMI  &kp APOS
                 &kp LSHFT &kp Z  &kp X    &kp C    &kp V     &kp B    &kp LBKT               &kp RBKT   &kp N     &kp M     &kp COMMA &kp DOT   &kp FSLH  &kp RSHFT
-                                 &KP LALT &KP LGUI                                                                         &kp RALT  &kp RGUI
-                                                   &kp SPACE &kp BSPC &kp NUHS               &kp HOME   &kp END   &KP ENTER
-                                                             &kp PIPE &kp INS                &sl RISE   &kp LOWER
+                                 &kp LALT &kp LGUI                                                                         &kp RALT  &kp RGUI
+                                                  &kp SPACE &kp BSPC &kp NUHS               &kp HOME   &kp END   &kp ENTER
+                                                            &kp PIPE &kp INS                &sl RISE   &kp LOWER
             >;
         };
         raise_layer {
@@ -74,9 +74,9 @@
                 &kp TAB   &kp Q  &kp W    &kp E    &kp R     &kp T    &kp PG_UP              &tog LOWER &kp Y     &kp U     &kp I     &kp O     &kp P     &kp BLSH
                 &kp LCTRL &kp A  &kp S    &kp D    &kp F     &kp G    &kp PG_DW              &tog RISE  &kp H     &kp J     &kp K     &kp L     &kp SEMI  &kp APOS
                 &kp LSHFT &kp Z  &kp X    &kp C    &kp V     &kp B    &kp LBKT               &kp RBKT   &kp N     &kp M     &kp COMMA &kp DOT   &kp FSLH  &kp RSHFT
-                                 &KP LALT &KP LGUI                                                                         &kp RALT  &kp RGUI
-                                                   &kp SPACE &kp BSPC &kp NUHS               &kp HOME   &kp END   &KP ENTER
-                                                             &kp PIPE &kp INS                &sl RISE   &kp LOWER
+                                 &kp LALT &kp LGUI                                                                         &kp RALT  &kp RGUI
+                                                  &kp SPACE &kp BSPC &kp NUHS               &kp HOME   &kp END   &kp ENTER
+                                                            &kp PIPE &kp INS                &sl RISE   &kp LOWER
             >;
         };
         adjust_layer {
@@ -96,9 +96,9 @@
                 &kp TAB   &kp Q  &kp W    &kp E    &kp R     &kp T    &kp PG_UP              &tog LOWER &kp Y     &kp U     &kp I     &kp O     &kp P     &kp BLSH
                 &kp LCTRL &kp A  &kp S    &kp D    &kp F     &kp G    &kp PG_DW              &tog RISE  &kp H     &kp J     &kp K     &kp L     &kp SEMI  &kp APOS
                 &kp LSHFT &kp Z  &kp X    &kp C    &kp V     &kp B    &kp LBKT               &kp RBKT   &kp N     &kp M     &kp COMMA &kp DOT   &kp FSLH  &kp RSHFT
-                                 &KP LALT &KP LGUI                                                                         &kp RALT  &kp RGUI
-                                                   &kp SPACE &kp BSPC &kp NUHS               &kp HOME   &kp END   &KP ENTER
-                                                             &kp PIPE &kp INS                &sl RISE   &kp LOWER
+                                 &kp LALT &kp LGUI                                                                         &kp RALT  &kp RGUI
+                                                  &kp SPACE &kp BSPC &kp NUHS               &kp HOME   &kp END   &kp ENTER
+                                                            &kp PIPE &kp INS                &sl RISE   &kp LOWER
             >;
         };
     };

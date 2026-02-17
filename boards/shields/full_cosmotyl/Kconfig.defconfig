@@ -1,4 +1,4 @@
-If SHIELD_FULL_COSMOTYL_LEFT
+if SHIELD_FULL_COSMOTYL_LEFT
 
 config ZMK_KEYBOARD_NAME
     default "full-cosmotyl"
