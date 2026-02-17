@@ -1,0 +1,105 @@
+// This file was generated from a template. Edit it to match your keyboard.
+// See https://zmk.dev/docs/development/hardware-integration/new-shield for more instructions.
+
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/keys.h>
+#define DEFAULT 0
+#define LOWER  1
+#define RAISE  2
+#define ADJUST 3
+/ {
+    // Define a default keymap here.
+    // See https://zmk.dev/docs/development/hardware-integration/new-shield#default-keymap.
+    keymap {
+        compatible = "zmk,keymap";
+
+        default_layer {
+            display-name = "main";
+            // ------------------------------------------------------------------------------------------
+            // |   ESC   |  F1   |  F2  |    F3    |    F4   |   F5   |   F6    |            |   F7    |   F8   |   F9    |  F10  |   F11    |   F12    |          |
+            // |   `     |   1   |   2  |     3    |     4   |    5   |    6    |            |   7     |    8   |    9    |   0   |     -    |     =    |   BSPC   |
+            // |   TAB   |   q   |   w  |     e    |     r   |    t   |  PG UP  |            |   rise  |    y   |    u    |   i   |     o    |     p    |    \     |
+            // |  CTRL   |   a   |   s  |     d    |     f   |    g   |  PG DW  |            |   lower |    h   |    j    |   k   |     l    |     ;    |   '      |
+            // |  SHIFT  |   z   |   x  |     c    |     v   |    b   |   {     |            |    }    |    n   |    m    |   <   |     >    |     ?    |   SHIFT  |
+            //                   | LALT |   LGUI   |                                                                      | RALT | RGUI |
+            //                                     |    SPC  |  BSPC  |   NUHS  |            |   PGUP  | PG DWN |  ENTER  |
+            //                                               |  PIPE  |    INS  |            |   m RI  | m LO   |
+            bindings = <
+                &kp ESC   &kp F1 &kp F2   &kp F3   &kp F4    &kp F5   &kp F6                 &kp F7     &kp F8    &kp F9    &kp F10   &kp F11   &kp F12   &none
+                &kp GRAVE &kp N1 &kp N2   &kp N3   &kp N4    &kp N5   &kp N6                 &kp N7     &kp N8    &kp N9    &kp N10   &kp MINUS &kp EQUAL &kp BSPC
+                &kp TAB   &kp Q  &kp W    &kp E    &kp R     &kp T    &kp PG_UP              &tog LOWER &kp Y     &kp U     &kp I     &kp O     &kp P     &kp BLSH
+                &kp LCTRL &kp A  &kp S    &kp D    &kp F     &kp G    &kp PG_DW              &tog RISE  &kp H     &kp J     &kp K     &kp L     &kp SEMI  &kp APOS
+                &kp LSHFT &kp Z  &kp X    &kp C    &kp V     &kp B    &kp LBKT               &kp RBKT   &kp N     &kp M     &kp COMMA &kp DOT   &kp FSLH  &kp RSHFT
+                                 &KP LALT &KP LGUI                                                                         &kp RALT  &kp RGUI
+                                                   &kp SPACE &kp BSPC &kp NUHS               &kp HOME   &kp END   &KP ENTER
+                                                             &kp PIPE &kp INS                &sl RISE   &kp LOWER
+            >;
+        };
+        lower_layer {
+            display-name = "lower";
+            // ------------------------------------------------------------------------------------------
+            // |   ESC   |  F1   |  F2  |    F3    |    F4   |   F5   |   F6    |            |   F7    |   F8   |   F9    |  F10  |   F11    |   F12    |          |
+            // |   `     |   1   |   2  |     3    |     4   |    5   |    6    |            |   7     |    8   |    9    |   0   |     -    |     =    |   BSPC   |
+            // |   TAB   |   q   |   w  |     e    |     r   |    t   |  PG UP  |            |   rise  |    y   |    u    |   i   |     o    |     p    |    \     |
+            // |  CTRL   |   a   |   s  |     d    |     f   |    g   |  PG DW  |            |   lower |    h   |    j    |   k   |     l    |     ;    |   '      |
+            // |  SHIFT  |   z   |   x  |     c    |     v   |    b   |   {     |            |    }    |    n   |    m    |   <   |     >    |     ?    |   SHIFT  |
+            //                   | LALT |   LGUI   |                                                                      | RALT | RGUI |
+            //                                     |    SPC  |  BSPC  |   NUHS  |            |   PGUP  | PG DWN |  ENTER  |
+            //                                               |  PIPE  |    INS  |            |   m RI  | m LO   |
+            bindings = <
+                &kp ESC   &kp F1 &kp F2   &kp F3   &kp F4    &kp F5   &kp F6                 &kp F7     &kp F8    &kp F9    &kp F10   &kp F11   &kp F12   &none
+                &studio_unlock &kp N1 &kp N2   &kp N3   &kp N4    &kp N5   &kp N6                 &kp N7     &kp N8    &kp N9    &kp N10   &kp MINUS &kp EQUAL &kp BSPC
+                &kp TAB   &kp Q  &kp W    &kp E    &kp R     &kp T    &kp PG_UP              &tog LOWER &kp Y     &kp U     &kp I     &kp O     &kp P     &kp BLSH
+                &kp LCTRL &kp A  &kp S    &kp D    &kp F     &kp G    &kp PG_DW              &tog RISE  &kp H     &kp J     &kp K     &kp L     &kp SEMI  &kp APOS
+                &kp LSHFT &kp Z  &kp X    &kp C    &kp V     &kp B    &kp LBKT               &kp RBKT   &kp N     &kp M     &kp COMMA &kp DOT   &kp FSLH  &kp RSHFT
+                                 &KP LALT &KP LGUI                                                                         &kp RALT  &kp RGUI
+                                                   &kp SPACE &kp BSPC &kp NUHS               &kp HOME   &kp END   &KP ENTER
+                                                             &kp PIPE &kp INS                &sl RISE   &kp LOWER
+            >;
+        };
+        raise_layer {
+            display-name = "raise";
+            // ------------------------------------------------------------------------------------------
+            // |   ESC   |  F1   |  F2  |    F3    |    F4   |   F5   |   F6    |            |   F7    |   F8   |   F9    |  F10  |   F11    |   F12    |          |
+            // |   `     |   1   |   2  |     3    |     4   |    5   |    6    |            |   7     |    8   |    9    |   0   |     -    |     =    |   BSPC   |
+            // |   TAB   |   q   |   w  |     e    |     r   |    t   |  PG UP  |            |   rise  |    y   |    u    |   i   |     o    |     p    |    \     |
+            // |  CTRL   |   a   |   s  |     d    |     f   |    g   |  PG DW  |            |   lower |    h   |    j    |   k   |     l    |     ;    |   '      |
+            // |  SHIFT  |   z   |   x  |     c    |     v   |    b   |   {     |            |    }    |    n   |    m    |   <   |     >    |     ?    |   SHIFT  |
+            //                   | LALT |   LGUI   |                                                                      | RALT | RGUI |
+            //                                     |    SPC  |  BSPC  |   NUHS  |            |   PGUP  | PG DWN |  ENTER  |
+            //                                               |  PIPE  |    INS  |            |   m RI  | m LO   |
+            bindings = <
+                &kp ESC   &kp F1 &kp F2   &kp F3   &kp F4    &kp F5   &kp F6                 &kp F7     &kp F8    &kp F9    &kp F10   &kp F11   &kp F12   &none
+                &kp GRAVE &kp N1 &kp N2   &kp N3   &kp N4    &kp N5   &kp N6                 &kp N7     &kp N8    &kp N9    &kp N10   &kp MINUS &kp EQUAL &kp BSPC
+                &kp TAB   &kp Q  &kp W    &kp E    &kp R     &kp T    &kp PG_UP              &tog LOWER &kp Y     &kp U     &kp I     &kp O     &kp P     &kp BLSH
+                &kp LCTRL &kp A  &kp S    &kp D    &kp F     &kp G    &kp PG_DW              &tog RISE  &kp H     &kp J     &kp K     &kp L     &kp SEMI  &kp APOS
+                &kp LSHFT &kp Z  &kp X    &kp C    &kp V     &kp B    &kp LBKT               &kp RBKT   &kp N     &kp M     &kp COMMA &kp DOT   &kp FSLH  &kp RSHFT
+                                 &KP LALT &KP LGUI                                                                         &kp RALT  &kp RGUI
+                                                   &kp SPACE &kp BSPC &kp NUHS               &kp HOME   &kp END   &KP ENTER
+                                                             &kp PIPE &kp INS                &sl RISE   &kp LOWER
+            >;
+        };
+        adjust_layer {
+            display-name = "adjust";
+            // ------------------------------------------------------------------------------------------
+            // |   ESC   |  F1   |  F2  |    F3    |    F4   |   F5   |   F6    |            |   F7    |   F8   |   F9    |  F10  |   F11    |   F12    |          |
+            // |   `     |   1   |   2  |     3    |     4   |    5   |    6    |            |   7     |    8   |    9    |   0   |     -    |     =    |   BSPC   |
+            // |   TAB   |   q   |   w  |     e    |     r   |    t   |  PG UP  |            |   rise  |    y   |    u    |   i   |     o    |     p    |    \     |
+            // |  CTRL   |   a   |   s  |     d    |     f   |    g   |  PG DW  |            |   lower |    h   |    j    |   k   |     l    |     ;    |   '      |
+            // |  SHIFT  |   z   |   x  |     c    |     v   |    b   |   {     |            |    }    |    n   |    m    |   <   |     >    |     ?    |   SHIFT  |
+            //                   | LALT |   LGUI   |                                                                      | RALT | RGUI |
+            //                                     |    SPC  |  BSPC  |   NUHS  |            |   PGUP  | PG DWN |  ENTER  |
+            //                                               |  PIPE  |    INS  |            |   m RI  | m LO   |
+            bindings = <
+                &kp ESC   &kp F1 &kp F2   &kp F3   &kp F4    &kp F5   &kp F6                 &kp F7     &kp F8    &kp F9    &kp F10   &kp F11   &kp F12   &none
+                &kp GRAVE &kp N1 &kp N2   &kp N3   &kp N4    &kp N5   &kp N6                 &kp N7     &kp N8    &kp N9    &kp N10   &kp MINUS &kp EQUAL &kp BSPC
+                &kp TAB   &kp Q  &kp W    &kp E    &kp R     &kp T    &kp PG_UP              &tog LOWER &kp Y     &kp U     &kp I     &kp O     &kp P     &kp BLSH
+                &kp LCTRL &kp A  &kp S    &kp D    &kp F     &kp G    &kp PG_DW              &tog RISE  &kp H     &kp J     &kp K     &kp L     &kp SEMI  &kp APOS
+                &kp LSHFT &kp Z  &kp X    &kp C    &kp V     &kp B    &kp LBKT               &kp RBKT   &kp N     &kp M     &kp COMMA &kp DOT   &kp FSLH  &kp RSHFT
+                                 &KP LALT &KP LGUI                                                                         &kp RALT  &kp RGUI
+                                                   &kp SPACE &kp BSPC &kp NUHS               &kp HOME   &kp END   &KP ENTER
+                                                             &kp PIPE &kp INS                &sl RISE   &kp LOWER
+            >;
+        };
+    };
+};
