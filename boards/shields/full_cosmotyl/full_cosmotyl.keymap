@@ -20,12 +20,12 @@
         main_layer {
             display-name = "main";
             // -------------------------------------------------------------------------------------------------------------------------------------------------------------
-            // |    ESC   |  F1   |  F2  |    F3    |    F4   |    F5    |    F6     |            |   F7    |    F8    |   F9    |   F10   |   F11    |   F12    | ADJUST   |
-            // |    `     |   1   |   2  |     3    |     4   |     5    |     6     |            |   7     |     8    |    9    |    0    |     -    |     =    | SYMNUM   |
-            // |    TAB   |   q   |   w  |     e    |     r   |     t    |   PG UP   |            |   HOME  |     y    |    u    |    i    |     o    |     p    |  MEDIA   |
-            // |   CTRL   |   a   |   s  |     d    |     f   |     g    |   PG DW   |            |   END   |     h    |    j    |    k    |     l    |     ;    |   SHIFT  |
-            // |   SHIFT  |   z   |   x  |     c    |     v   |     b    |  mo LOWER |            | mo RISE |     n    |    m    |    <    |     >    |     ?    |   CTRL   |
-            //                   | LALT |   LGUI   |                                                                             |  RALT   |   RGUI   |
+            // |    ESC   |  F1   |  F2  |    F3    |    F4   |    F5    |    F6     |      :      |   F7    |    F8    |   F9    |   F10   |   F11    |   F12    | ADJUST   |
+            // |    `     |   1   |   2  |     3    |     4   |     5    |     6     |      :     |   7     |     8    |    9    |    0    |     -    |     =    | SYMNUM   |
+            // |    TAB   |   q   |   w  |     e    |     r   |     t    |   PG UP   |      :      |   HOME  |     y    |    u    |    i    |     o    |     p    |  MEDIA   |
+            // |   CTRL   |   a   |   s  |     d    |     f   |     g    |   PG DW   |      :     |   END   |     h    |    j    |    k    |     l    |     ;    |   SHIFT  |
+            // |   SHIFT  |   z   |   x  |     c    |     v   |     b    |  mo LOWER |      :     | mo RISE |     n    |    m    |    <    |     >    |     ?    |   CTRL   |
+            //                   | LALT |   LGUI   |                                                                            |  RALT   |   RGUI   |
             //                                     |    SPC  |   BSPC   |    NUHS   |             |  INS    |  DEL     |   ENTER  |
             //                                               | LEFT ARR | RIGHT ARR |             | UP ARR  | DOWN ARR |
             bindings = <
@@ -35,7 +35,7 @@
                 &kp LSHIFT &kp A  &kp S    &kp D     &kp F     &kp G      &kp PG_DN                &kp END    &kp H    &kp J      &kp K     &kp L      &kp SEMI   &kp RSHIFT
                 &kp LCTRL  &kp Z  &kp X    &kp C     &kp V     &kp B      &mo SYMNUM               &mo MEDIA  &kp N    &kp M      &kp COMMA &kp DOT    &kp FSLH   &kp RCTRL
                                  &kp LALT &kp LGUI                                                                                &kp RALT  &kp RGUI
-                                                    &kp SPACE &kp BSPC   &kp NUHS                  &kp INS   &kp DEL  &kp ENTER
+                                                    &kp SPACE &kp BSPC   &kp NUHS                  &kp INS    &kp DEL  &kp ENTER
                                                               &kp LEFT   &kp RIGHT                 &kp UP     &kp DOWN
             >;
         };
