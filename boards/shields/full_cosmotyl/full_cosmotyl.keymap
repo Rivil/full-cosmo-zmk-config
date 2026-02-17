@@ -57,8 +57,8 @@
                 &trans   &none    &none     &kp TILDE  &kp LPAR   &kp RPAR     &kp DQT                    &kp KP_N4       &kp KP_N5    &kp KP_N6       &kp KP_DOT   &kp KP_COMMA &none     &trans
                 &trans   &none    &kp NUBS  &kp FSLH   &kp LBKT   &kp RBKT     &kp HASH                   &kp KP_N1       &kp KP_N2    &kp KP_N3       &kp KP_N0    &none        &tog MAIN &trans
                                   &trans    &trans                                                                                                     &trans       &trans
-                                                       &trans    &trans        &mo MEDIA                 &mo MAIN        &trans   &kp KP_ENTER
-                                                                 &trans        &trans                    &trans          &trans
+                                                       &trans     &trans       &mo MEDIA                  &mo MAIN        &trans        &kp KP_ENTER
+                                                                  &trans       &trans                     &trans          &trans
             >;
         };
         media_layer {
@@ -99,10 +99,10 @@
             bindings = <
                 &bt BT_CLR      &bt BT_SEL 0   &bt BT_SEL 1   &bt BT_SEL 2   &bt BT_SEL 3   &bt BT_SEL 4   &out OUT_USB          &sys_reset   &none      &none      &ext_power EP_TOG  &soft_off   &none     &trans
                 &none           &bt BT_DISC 0  &bt BT_DISC 1  &bt BT_DISC 2  &bt BT_DISC 3  &bt BT_DISC 4  &out OUT_BLE          &none        &none      &none      &none              &none       &none     &trans
-                &none           &none          &none          &none          &none          &none          &none                 &none        &none      &none      &none       &none       &none     &trans
-                &none           &none          &none          &none          &none          &none          &none                 &none        &none      &none      &none       &none       &none     &none
-                &studio_unlock  &none          &none          &none          &none          &none          &bootloader           &bootloader  &none      &none      &none       &none       &trans    &none
-                                               &none          &none                                                                                                 &none       &none
+                &none           &none          &none          &none          &none          &none          &none                 &none        &none      &none      &none              &none       &none     &trans
+                &none           &none          &none          &none          &none          &none          &none                 &none        &none      &none      &none              &none       &none     &none
+                &studio_unlock  &none          &none          &none          &none          &none          &bootloader           &bootloader  &none      &none      &none              &none       &trans    &none
+                                               &none          &none                                                                                                 &none              &none
                                                                              &none          &none          &none                 &none        &none      &none
                                                                                             &bt BT_NXT     &bt BT_PRV            &none        &none
             >;
