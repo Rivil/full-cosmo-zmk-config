@@ -3,102 +3,104 @@
 
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
-#define DEFAULT 0
-#define LOWER  1
-#define RAISE  2
-#define ADJUST 3
+#define MAIN    0
+#define SYMNUM  1
+#define MEDIA    2
+#define ADJUST  3
 / {
     // Define a default keymap here.
     // See https://zmk.dev/docs/development/hardware-integration/new-shield#default-keymap.
     keymap {
         compatible = "zmk,keymap";
 
-        default_layer {
+        main_layer {
             display-name = "main";
             // ------------------------------------------------------------------------------------------
-            // |   ESC   |  F1   |  F2  |    F3    |    F4   |   F5   |   F6    |            |   F7    |   F8   |   F9    |  F10  |   F11    |   F12    |          |
-            // |   `     |   1   |   2  |     3    |     4   |    5   |    6    |            |   7     |    8   |    9    |   0   |     -    |     =    |   BSPC   |
-            // |   TAB   |   q   |   w  |     e    |     r   |    t   |  PG UP  |            |   rise  |    y   |    u    |   i   |     o    |     p    |    \     |
-            // |  CTRL   |   a   |   s  |     d    |     f   |    g   |  PG DW  |            |   lower |    h   |    j    |   k   |     l    |     ;    |   '      |
-            // |  SHIFT  |   z   |   x  |     c    |     v   |    b   |   {     |            |    }    |    n   |    m    |   <   |     >    |     ?    |   SHIFT  |
-            //                   | LALT |   LGUI   |                                                                      | RALT | RGUI |
-            //                                     |    SPC  |  BSPC  |   NUHS  |            |   PGUP  | PG DWN |  ENTER  |
-            //                                               |  PIPE  |    INS  |            |   m RI  | m LO   |
+            // |    ESC   |  F1   |  F2  |    F3    |    F4   |    F5    |    F6     |            |   F7    |    F8    |   F9    |   F10   |   F11    |   F12    | ADJUST   |
+            // |    `     |   1   |   2  |     3    |     4   |     5    |     6     |            |   7     |     8    |    9    |    0    |     -    |     =    | SYMNUM   |
+            // |    TAB   |   q   |   w  |     e    |     r   |     t    |   PG UP   |            |   HOME  |     y    |    u    |    i    |     o    |     p    |  MEDIA   |
+            // |   CTRL   |   a   |   s  |     d    |     f   |     g    |   PG DW   |            |   END   |     h    |    j    |    k    |     l    |     ;    |   SHIFT  |
+            // |   SHIFT  |   z   |   x  |     c    |     v   |     b    |  mo LOWER |            | mo RISE |     n    |    m    |    <    |     >    |     ?    |   CTRL   |
+            //                   | LALT |   LGUI   |                                                                             |  RALT   |   RGUI   |
+            //                                     |    SPC  |   BSPC   |    NUHS   |             |  INS    |  DEL     |   ENTER  |
+            //                                               | LEFT ARR | RIGHT ARR |             | UP ARR  | DOWN ARR |
             bindings = <
-                &kp ESC   &kp F1 &kp F2   &kp F3   &kp F4    &kp F5   &kp F6                 &kp F7     &kp F8    &kp F9    &kp F10   &kp F11   &kp F12   &none
-                &kp GRAVE &kp N1 &kp N2   &kp N3   &kp N4    &kp N5   &kp N6                 &kp N7     &kp N8    &kp N9    &kp N0    &kp MINUS &kp EQUAL &kp BSPC
-                &kp TAB   &kp Q  &kp W    &kp E    &kp R     &kp T    &kp PG_UP              &tog LOWER &kp Y     &kp U     &kp I     &kp O     &kp P     &kp BSLH
-                &kp LCTRL &kp A  &kp S    &kp D    &kp F     &kp G    &kp PG_DN              &tog RAISE  &kp H     &kp J     &kp K     &kp L     &kp SEMI  &kp APOS
-                &kp LSHFT &kp Z  &kp X    &kp C    &kp V     &kp B    &kp LBKT               &kp RBKT   &kp N     &kp M     &kp COMMA &kp DOT   &kp FSLH  &kp RSHFT
-                                 &kp LALT &kp LGUI                                                                         &kp RALT  &kp RGUI
-                                                &kp SPACE &kp BSPC &kp NUHS               &kp HOME   &kp END   &kp ENTER
-                                                          &kp PIPE &kp INS                &sl RAISE   &mo LOWER
+                &kp ESC    &kp F1 &kp F2   &kp F3    &kp F4    &kp F5     &kp F6                   &kp F7     &kp F8   &kp F9     &kp F10   &kp F11    &kp F12    &tog ADJUST
+                &kp GRAVE  &kp N1 &kp N2   &kp N3    &kp N4    &kp N5     &kp N6                   &kp N7     &kp N8   &kp N9     &kp N0    &kp MINUS  &kp EQUAL  &tog SYMNUM
+                &kp TAB    &kp Q  &kp W    &kp E     &kp R     &kp T      &kp PG_UP                &kp HOME   &kp Y    &kp U      &kp I     &kp O      &kp P      &tog MEDIA
+                &kp LSHIFT &kp A  &kp S    &kp D     &kp F     &kp G      &kp PG_DN                &kp END    &kp H    &kp J      &kp K     &kp L      &kp SEMI   &kp RSHIFT
+                &kp LCTRL  &kp Z  &kp X    &kp C     &kp V     &kp B      &mo SYMNUM               &mo MEDIA  &kp N    &kp M      &kp COMMA &kp DOT    &kp FSLH   &kp RCTRL
+                                 &kp LALT &kp LGUI                                                                                &kp RALT  &kp RGUI
+                                                    &kp SPACE &kp BSPC   &kp NUHS                  &kp INS   &kp DEL  &kp ENTER
+                                                              &kp LEFT   &kp RIGHT                 &kp UP     &kp DOWN
             >;
         };
-        lower_layer {
-            display-name = "lower";
+        symnum_layer {
+            display-name = "symnum";
             // ------------------------------------------------------------------------------------------
-            // |   ESC   |  F1   |  F2  |    F3    |    F4   |   F5   |   F6    |            |   F7    |   F8   |   F9    |  F10  |   F11    |   F12    |          |
-            // |   `     |   1   |   2  |     3    |     4   |    5   |    6    |            |   7     |    8   |    9    |   0   |     -    |     =    |   BSPC   |
-            // |   TAB   |   q   |   w  |     e    |     r   |    t   |  PG UP  |            |   rise  |    y   |    u    |   i   |     o    |     p    |    \     |
-            // |  CTRL   |   a   |   s  |     d    |     f   |    g   |  PG DW  |            |   lower |    h   |    j    |   k   |     l    |     ;    |   '      |
-            // |  SHIFT  |   z   |   x  |     c    |     v   |    b   |   {     |            |    }    |    n   |    m    |   <   |     >    |     ?    |   SHIFT  |
-            //                   | LALT |   LGUI   |                                                                      | RALT | RGUI |
-            //                                     |    SPC  |  BSPC  |   NUHS  |            |   PGUP  | PG DWN |  ENTER  |
-            //                                               |  PIPE  |    INS  |            |   m RI  | m LO   |
+            // | +  ESC   |   !    |    @   |     £    |     $   |      %     |      ^      |            |     &      |      *     |       (       |     )      |     -      |     =    | + ADJUST |
+            // | +  CAPS  |        |        |     ?    |     ;   |      :     |      `      |            |  NUM LOCK  |    KP /    |      KP *     |    KP -    |            |          | + SYMNUM |
+            // | +  TAB   |        |        |     |    |     {   |      }     |      '      |            |    KP 7    |    KP 8    |      KP 9     |    KP +    |            |          | +  MEDIA |
+            // | + LCTRL  |        |        |     ~    |     (   |      )     |      "      |            |    KP 4    |    KP 5    |      KP 6     |    KP .    |   KP ,     |          | + RSHIFT |
+            // | + LSHIFT |        |    \   |     /    |     [   |      ]     |      #      |            |    KP 1    |    KP 2    |      KP 3     |    KP 0    |            |   MAIN   | + RCTRL  |
+            //                     | + LALT | + LGUI   |                                                                                           |   + RALT   |  + RGUI    |
+            //                                         |  + SPC  |  + BSPC    |   mo MEDIA  |            |  mo MAIN   |  + DEL     |   KP ENTER    |
+            //                                                   | + LEFT ARR | + RIGHT ARR |            | + UP ARR   | + DOWN ARR |
             bindings = <
-                &kp ESC   &kp F1 &kp F2   &kp F3   &kp F4    &kp F5   &kp F6                 &kp F7     &kp F8    &kp F9    &kp F10   &kp F11   &kp F12   &none
-                &studio_unlock &kp N1 &kp N2   &kp N3   &kp N4    &kp N5   &kp N6                 &kp N7     &kp N8    &kp N9    &kp N0    &kp MINUS &kp EQUAL &kp BSPC
-                &kp TAB   &kp Q  &kp W    &kp E    &kp R     &kp T    &kp PG_UP              &tog LOWER &kp Y     &kp U     &kp I     &kp O     &kp P     &kp BSLH
-                &kp LCTRL &kp A  &kp S    &kp D    &kp F     &kp G    &kp PG_DN              &tog RAISE  &kp H     &kp J     &kp K     &kp L     &kp SEMI  &kp APOS
-                &kp LSHFT &kp Z  &kp X    &kp C    &kp V     &kp B    &kp LBKT               &kp RBKT   &kp N     &kp M     &kp COMMA &kp DOT   &kp FSLH  &kp RSHFT
-                                 &kp LALT &kp LGUI                                                                         &kp RALT  &kp RGUI
-                                                &kp SPACE &kp BSPC &kp NUHS               &kp HOME   &kp END   &kp ENTER
-                                                          &kp PIPE &kp INS                &sl RAISE   &mo LOWER
+                &trans   &kp EXCL &kp AT    &kp HASH   &kp DLLR   &kp PRCNT    &kp CARET                  &kp AMPS        &kp STAR     &kp LPAR        &kp RPAR     &kp MINUS    &kp EQUAL &trans
+                &kp CAPS &none    &none     &kp QMARK  &kp SEMI   &kp COLON    &kp GRAVE                  &kp KP_NUM      &kp KP_SLASH &kp KP_ASTERISK &kp KP_MINUS &none        &none     &trans
+                &trans   &none    &none     &kp PIPE   &kp LBRC   &kp RBRC     &kp APOS                   &kp KP_N7       &kp KP_N8    &kp KP_N9       &kp KP_PLUS  &none        &none     &trans
+                &trans   &none    &none     &kp TILDE  &kp LPAR   &kp RPAR     &kp DQT                    &kp KP_N4       &kp KP_N5    &kp KP_N6       &kp KP_DOT   &kp KP_COMMA &none     &trans
+                &trans   &none    &kp NUBS  &kp FSLH   &kp LBKT   &kp RBKT     &kp HASH                   &kp KP_N1       &kp KP_N2    &kp KP_N3       &kp KP_N0    &none        &tog MAIN &trans
+                                  &trans    &trans                                                                                                     &trans       &trans
+                                                       &trans    &trans        &mo MEDIA                 &mo MAIN        &trans   &kp KP_ENTER
+                                                                 &trans        &trans                    &trans          &trans
             >;
         };
-        raise_layer {
-            display-name = "raise";
-            // ------------------------------------------------------------------------------------------
-            // |   ESC   |  F1   |  F2  |    F3    |    F4   |   F5   |   F6    |            |   F7    |   F8   |   F9    |  F10  |   F11    |   F12    |          |
-            // |   `     |   1   |   2  |     3    |     4   |    5   |    6    |            |   7     |    8   |    9    |   0   |     -    |     =    |   BSPC   |
-            // |   TAB   |   q   |   w  |     e    |     r   |    t   |  PG UP  |            |   rise  |    y   |    u    |   i   |     o    |     p    |    \     |
-            // |  CTRL   |   a   |   s  |     d    |     f   |    g   |  PG DW  |            |   lower |    h   |    j    |   k   |     l    |     ;    |   '      |
-            // |  SHIFT  |   z   |   x  |     c    |     v   |    b   |   {     |            |    }    |    n   |    m    |   <   |     >    |     ?    |   SHIFT  |
-            //                   | LALT |   LGUI   |                                                                      | RALT | RGUI |
-            //                                     |    SPC  |  BSPC  |   NUHS  |            |   PGUP  | PG DWN |  ENTER  |
-            //                                               |  PIPE  |    INS  |            |   m RI  | m LO   |
+        media_layer {
+            display-name = "media";
+            // -------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            // |          |          |          |          |          |          |          |   :   |          |          |          |          |          |          | + ADJUST |
+            // |          |          |          |          |          |          |          |   :   |          |          |          |          |          |          | + SYMNUM |
+            // |          |          |          |          |          |          |          |   :   |          |          |          |          |          |          | + MEDIA  |
+            // |          |          |          |          |          |          |          |   :   |          |          |          |          |          |          |          |
+            // |          |          |          |          |          |          |          |   :   |          |          |          |          |          |  + MAIN  |          |
+            // ----------------------|          |          |================================|   :   |================================|          |          |----------------------
+            //                       ----------------------|          |          |          |   :   |          |          |          |----------------------
+            //                                             -----------|          |          |   :   |          |          |-----------
+            //                                                        -----------------------   :   -----------------------
             bindings = <
-                &kp ESC   &kp F1 &kp F2   &kp F3   &kp F4    &kp F5   &kp F6                 &kp F7     &kp F8    &kp F9    &kp F10   &kp F11   &kp F12   &none
-                &kp GRAVE &kp N1 &kp N2   &kp N3   &kp N4    &kp N5   &kp N6                 &kp N7     &kp N8    &kp N9    &kp N0    &kp MINUS &kp EQUAL &studio_unlock
-                &kp TAB   &kp Q  &kp W    &kp E    &kp R     &kp T    &kp PG_UP              &tog LOWER &kp Y     &kp U     &kp I     &kp O     &kp P     &kp BSLH
-                &kp LCTRL &kp A  &kp S    &kp D    &kp F     &kp G    &kp PG_DN              &tog RAISE  &kp H     &kp J     &kp K     &kp L     &kp SEMI  &kp APOS
-                &kp LSHFT &kp Z  &kp X    &kp C    &kp V     &kp B    &kp LBKT               &kp RBKT   &kp N     &kp M     &kp COMMA &kp DOT   &kp FSLH  &kp RSHFT
-                                 &kp LALT &kp LGUI                                                                         &kp RALT  &kp RGUI
-                                                &kp SPACE &kp BSPC &kp NUHS               &kp HOME   &kp END   &kp ENTER
-                                                          &kp PIPE &kp INS                &sl RAISE   &mo LOWER
+                &none      &none      &none      &none      &none      &none      &none              &none      &none      &none      &none      &none       &none     &trans
+                &none      &none      &none      &none      &none      &none      &none              &none      &none      &none      &none      &none       &none     &trans
+                &none      &none      &none      &none      &none      &none      &none              &none      &none      &none      &none      &none       &none     &trans
+                &none      &none      &none      &none      &none      &none      &none              &none      &none      &none      &none      &none       &none     &none
+                &none      &none      &none      &none      &none      &none      &none              &none      &none      &none      &none      &none       &trans    &none
+                                      &none      &none                                                                                &none      &none
+                                                            &none      &none      &none              &none      &none      &none
+                                                                       &none      &none              &none      &none
             >;
         };
         adjust_layer {
             display-name = "adjust";
-            // ------------------------------------------------------------------------------------------
-            // |   ESC   |  F1   |  F2  |    F3    |    F4   |   F5   |   F6    |            |   F7    |   F8   |   F9    |  F10  |   F11    |   F12    |          |
-            // |   `     |   1   |   2  |     3    |     4   |    5   |    6    |            |   7     |    8   |    9    |   0   |     -    |     =    |   BSPC   |
-            // |   TAB   |   q   |   w  |     e    |     r   |    t   |  PG UP  |            |   rise  |    y   |    u    |   i   |     o    |     p    |    \     |
-            // |  CTRL   |   a   |   s  |     d    |     f   |    g   |  PG DW  |            |   lower |    h   |    j    |   k   |     l    |     ;    |   '      |
-            // |  SHIFT  |   z   |   x  |     c    |     v   |    b   |   {     |            |    }    |    n   |    m    |   <   |     >    |     ?    |   SHIFT  |
-            //                   | LALT |   LGUI   |                                                                      | RALT | RGUI |
-            //                                     |    SPC  |  BSPC  |   NUHS  |            |   PGUP  | PG DWN |  ENTER  |
-            //                                               |  PIPE  |    INS  |            |   m RI  | m LO   |
+            // --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+            // |  BT_CLR       | BT_SEL 0     | BT_SEL 1     | BT_SEL 2     | BT_SEL 3     | BT_SEL 4     |   OUT_USB   |   :   | SYS-RESET  |          |          | EXT_POWER | SOFT_OFF |          | + ADJUST |
+            // |               | BT_DISC 0    | BT_DISC 1    | BT_DISC 2    | BT_DISC 3    | BT_DISC 4    |   OUT_BLE   |   :   |            |          |          |           |          |          | + SYMNUM |
+            // |               |              |              |              |              |              |             |   :   |            |          |          |           |          |          | + MEDIA  |
+            // |               |              |              |              |              |              |             |   :   |            |          |          |           |          |          |          |
+            // | STUDIO_UNLOCK |              |              |              |              |              | BOOTLOADER  |   :   | BOOTLOADER |          |          |           |          |  + MAIN  |          |
+            // -------------------------------|              |              |===========================================|   :   |==================================|           |          |----------------------
+            //                                ------------------------------|              |              |             |   :   |            |          |          |-----------------------
+            //                                                              ---------------|   BT_NXT     |    BT_PRV   |   :   |            |          |-----------
+            //                                                                             ------------------------------   :   -------------------------
             bindings = <
-                &kp ESC   &kp F1 &kp F2   &kp F3   &kp F4    &kp F5   &kp F6                 &kp F7     &kp F8    &kp F9    &kp F10   &kp F11   &kp F12   &none
-                &kp GRAVE &kp N1 &kp N2   &kp N3   &kp N4    &kp N5   &kp N6                 &kp N7     &kp N8    &kp N9    &kp N0    &kp MINUS &kp EQUAL &kp BSPC
-                &kp TAB   &kp Q  &kp W    &kp E    &kp R     &kp T    &kp PG_UP              &tog LOWER &kp Y     &kp U     &kp I     &kp O     &kp P     &kp BSLH
-                &kp LCTRL &kp A  &kp S    &kp D    &kp F     &kp G    &kp PG_DN              &tog RAISE  &kp H     &kp J     &kp K     &kp L     &kp SEMI  &kp APOS
-                &kp LSHFT &kp Z  &kp X    &kp C    &kp V     &kp B    &kp LBKT               &kp RBKT   &kp N     &kp M     &kp COMMA &kp DOT   &kp FSLH  &kp RSHFT
-                                 &kp LALT &kp LGUI                                                                         &kp RALT  &kp RGUI
-                                                &kp SPACE &kp BSPC &kp NUHS               &kp HOME   &kp END   &kp ENTER
-                                                          &kp PIPE &kp INS                &sl RAISE   &mo LOWER
+                &bt BT_CLR      &bt BT_SEL 0   &bt BT_SEL 1   &bt BT_SEL 2   &bt BT_SEL 3   &bt BT_SEL 4   &out OUT_USB          &sys_reset   &none      &none      &ext_power  &soft_off   &none     &trans
+                &none           &bt BT_DISC 0  &bt BT_DISC 1  &bt BT_DISC 2  &bt bT_DISC 3  &bt BT_DISC 4  &out OUT_BLE          &none        &none      &none      &none       &none       &none     &trans
+                &none           &none          &none          &none          &none          &none          &none                 &none        &none      &none      &none       &none       &none     &trans
+                &none           &none          &none          &none          &none          &none          &none                 &none        &none      &none      &none       &none       &none     &none
+                &studio_unlock  &none          &none          &none          &none          &none          &bootloader           &bootloader  &none      &none      &none       &none       &trans    &none
+                                               &none          &none                                                                                                 &none       &none
+                                                                             &none          &none          &none                 &none        &none      &none
+                                                                                            &bt BT_NXT     &bt BT_PRV            &none        &none
             >;
         };
     };
