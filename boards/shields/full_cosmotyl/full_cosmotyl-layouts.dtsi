@@ -3,12 +3,12 @@
 #include <physical_layouts.dtsi>
 
 / {
-    default_layout: physical_layout_0 {
+    physical_layout0: physical_layout_0 {
         compatible = "zmk,physical-layout";
         display-name = "Default";
 
-        kscan = <&kscan>;
-        transform = <&default_transform>;
+        kscan = <&kscan0>;
+        transform = <&matrix_transform0>;
 
         keys  //                     w   h    x    y     rot    rx    ry
             = <&key_physical_attrs 100 100    0    0       0     0     0>
@@ -81,10 +81,10 @@
             , <&key_physical_attrs 100 100 1200  400       0     0     0>
             , <&key_physical_attrs 100 100 1300  400       0     0     0>
             , <&key_physical_attrs 100 100 1400  400       0     0     0>
-            , <&key_physical_attrs 100 100  500  700       0     0     0>
-            , <&key_physical_attrs 100 100  600  700       0     0     0>
             , <&key_physical_attrs 100 100  200  500       0     0     0>
             , <&key_physical_attrs 100 100  300  500       0     0     0>
+            , <&key_physical_attrs 100 100  500  700       0     0     0>
+            , <&key_physical_attrs 100 100  600  700       0     0     0>
             , <&key_physical_attrs 100 100  400  600       0     0     0>
             , <&key_physical_attrs 100 100  500  600       0     0     0>
             , <&key_physical_attrs 100 100  600  600       0     0     0>
@@ -98,4 +98,3 @@
             ;
     };
 };
-
