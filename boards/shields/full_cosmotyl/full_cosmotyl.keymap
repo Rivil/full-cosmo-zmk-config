@@ -20,23 +20,23 @@
         main_layer {
             display-name = "main";
             // -------------------------------------------------------------------------------------------------------------------------------------------------------------
-            // |    ESC   |  F1   |  F2  |    F3    |    F4   |    F5    |    F6     |      :      |   F7    |    F8    |   F9    |   F10   |   F11    |   F12    | ADJUST   |
-            // |    `     |   1   |   2  |     3    |     4   |     5    |     6     |      :     |   7     |     8    |    9    |    0    |     -    |     =    | SYMNUM   |
-            // |    TAB   |   q   |   w  |     e    |     r   |     t    |   PG UP   |      :      |   HOME  |     y    |    u    |    i    |     o    |     p    |  MEDIA   |
-            // |   SHIFT  |   a   |   s  |     d    |     f   |     g    |   PG DW   |      :     |   END   |     h    |    j    |    k    |     l    |     ;    |   SHIFT  |
-            // |   CTRL   |   z   |   x  |     c    |     v   |     b    |  mo LOWER |      :     | mo RISE |     n    |    m    |    <    |     >    |     ?    |   CTRL   |
-            //                   | LALT |   LGUI   |                                                                            |  RALT   |   RGUI   |
-            //                                     |    SPC  |   BSPC   |    NUHS   |             |  INS    |  DEL     |   ENTER  |
-            //                                               | LEFT ARR | RIGHT ARR |             | UP ARR  | DOWN ARR |
+            // |    ESC   |  F1   |    F2    |    F3     |    F4   |    F5    |    F6     |      :     |   F7    |    F8    |   F9    |   F10    |   F11    |   F12    | ADJUST   |
+            // |    `     |   1   |     2    |     3     |     4   |     5    |     6     |      :     |   7     |     8    |    9    |    0     |     -    |     =    | SYMNUM   |
+            // |    TAB   |   q   |     w    |     e     |     r   |     t    |   PG UP   |      :     |   HOME  |     y    |    u    |    i     |     o    |     p    |  MEDIA   |
+            // |   SHIFT  |   a   |     s    |     d     |     f   |     g    |   PG DW   |      :     |   END   |     h    |    j    |    k     |     l    |     ;    |   SHIFT  |
+            // |   CTRL   |   z   |     x    |     c     |     v   |     b    |  mo LOWER |      :     | mo RISE |     n    |    m    |    <     |     >    |     ?    |   CTRL   |
+            //                    | LEFT ARR | RIGHT ARR |                                                                            | DOWN ARR | UP ARR  |
+            //                                           |    SPC  |   BSPC   |    NUHS   |             |  INS    |  DEL     |   ENTER  |
+            //                                                     |   LALT   |    LGUI   |             | UP ARR  | DOWN ARR |
             bindings = <
-                &kp ESC    &kp F1 &kp F2   &kp F3    &kp F4    &kp F5     &kp F6                   &kp F7     &kp F8   &kp F9     &kp F10   &kp F11    &kp F12    &tog ADJUST
-                &kp GRAVE  &kp N1 &kp N2   &kp N3    &kp N4    &kp N5     &kp N6                   &kp N7     &kp N8   &kp N9     &kp N0    &kp MINUS  &kp EQUAL  &tog SYMNUM
-                &kp TAB    &kp Q  &kp W    &kp E     &kp R     &kp T      &kp PG_UP                &kp HOME   &kp Y    &kp U      &kp I     &kp O      &kp P      &tog MEDIA
-                &kp LSHIFT &kp A  &kp S    &kp D     &kp F     &kp G      &kp PG_DN                &kp END    &kp H    &kp J      &kp K     &kp L      &kp SEMI   &kp RSHIFT
-                &kp LCTRL  &kp Z  &kp X    &kp C     &kp V     &kp B      &mo SYMNUM               &mo MEDIA  &kp N    &kp M      &kp COMMA &kp DOT    &kp FSLH   &kp RCTRL
-                                  &kp LALT &kp LGUI                                                                               &kp RALT  &kp RGUI
-                                                     &kp SPACE &kp BSPC   &kp NUHS                 &kp INS    &kp DEL  &kp ENTER
-                                                               &kp LEFT   &kp RIGHT                &kp UP     &kp DOWN
+                &kp ESC    &kp F1 &kp F2      &kp F3      &kp F4    &kp F5     &kp F6                   &kp F7     &kp F8   &kp F9     &kp F10   &kp F11    &kp F12    &tog ADJUST
+                &kp GRAVE  &kp N1 &kp N2      &kp N3      &kp N4    &kp N5     &kp N6                   &kp N7     &kp N8   &kp N9     &kp N0    &kp MINUS  &kp EQUAL  &tog SYMNUM
+                &kp TAB    &kp Q  &kp W       &kp E       &kp R     &kp T      &kp PG_UP                &kp HOME   &kp Y    &kp U      &kp I     &kp O      &kp P      &tog MEDIA
+                &kp LSHIFT &kp A  &kp S       &kp D       &kp F     &kp G      &kp PG_DN                &kp END    &kp H    &kp J      &kp K     &kp L      &kp SEMI   &kp RSHIFT
+                &kp LCTRL  &kp Z  &kp X       &kp C       &kp V     &kp B      &mo SYMNUM               &mo MEDIA  &kp N    &kp M      &kp COMMA &kp DOT    &kp FSLH   &kp RCTRL
+                                  &kp LEFT    &kp RIGHT                                                                                &kp DOWN  &kp UP
+                                                          &kp SPACE &kp BSPC   &kp NUHS                 &kp INS    &kp DEL  &kp ENTER
+                                                                    &kp LALT   &kp LGUI                 &kp RGUI   &kp RALT
             >;
         };
         symnum_layer {
