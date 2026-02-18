@@ -21,7 +21,7 @@
             bindings = <&kp LSHIFT>, <&kp CAPS>;
         };
         mmv_cust: mouse_movement {
-            compatible = "zmk,behavior-mouse-movement";
+            compatible = "zmk,behavior-mouse-move";
             #binding-cells = <1>;
             x-input-code = <0>;
             y-input-code = <1>;
