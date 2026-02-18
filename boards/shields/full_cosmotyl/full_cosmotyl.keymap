@@ -20,14 +20,6 @@
             tapping-term-ms = <200>;
             bindings = <&kp LSHIFT>, <&kp CAPS>;
         };
-        mmv_cust: mouse_movement {
-            compatible = "zmk,behavior-input-two-axis";
-            #binding-cells = <1>;
-            x-input-code = <0>;
-            y-input-code = <1>;
-            time-to-max-speed-ms = <300>;
-            acceleration-exponent = <1>;
-        };
     };
 
     // Define a default keymap here.
@@ -95,7 +87,7 @@
                 &none      &none      &none      &none      &none      &none      &none              &none      &none          &none          &none        &none           &none     &trans
                 &none      &none      &none      &none      &none      &none      &none              &none      &none          &none          &none        &none           &none     &trans
                 &none      &none      &none      &none      &none      &none      &none              &none      &none          &none          &none        &none           &none     &trans
-                &none      &none      &mkp LCLK  &mkp MCLK  &mkp RCLK  &none      &none              &none      &mmv_cust MOVE_LEFT &mmv_cust MOVE_DOWN &mmv_cust MOVE_UP &mmv_cust MOVE_RIGHT &none     &none
+                &none      &none      &mkp LCLK  &mkp MCLK  &mkp RCLK  &none      &none              &none      &mmv MOVE_LEFT &mmv MOVE_DOWN &mmv MOVE_UP &mmv MOVE_RIGHT &none     &none
                 &none      &none      &none      &none      &none      &none      &none              &none      &msc SCRL_LEFT &msc SCRL_DOWN &msc SCRL_UP &msc SCRL_RIGHT &trans    &none
                                       &none      &none                                                                                        &none        &none
                                                             &none      &none      &none              &none      &none          &none
