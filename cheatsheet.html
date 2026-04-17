@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Full Cosmotyl — Keymap Cheatsheet</title>
+<style>
+  :root {
+    --key-bg: #fff;
+    --key-border: #999;
+    --key-mod: #f1f3f5;
+    --key-trans: #fafafa;
+    --key-none: #f6f6f6;
+    --key-mouse: #e7f5ff;
+    --key-media: #fff9db;
+    --key-bt: #fff4e6;
+    --key-sys: #ffe3e3;
+    --key-layer: #e6fcf5;
+    --text: #111;
+    --muted: #888;
+  }
+
+  @page { size: A4 landscape; margin: 6mm; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: var(--text);
+    background: #fff;
+  }
+
+  .page {
+    width: 100%;
+    page-break-after: always;
+    padding: 3mm 0 0;
+    box-sizing: border-box;
+  }
+  .page:last-child { page-break-after: auto; }
+
+  h1 {
+    font-size: 13pt;
+    margin: 0 0 2mm 0;
+    text-align: center;
+    letter-spacing: 0.5px;
+  }
+  h1 small { color: var(--muted); font-weight: 400; font-size: 9pt; }
+
+  .layer {
+    margin: 0 auto 3mm auto;
+    width: 240mm;
+    max-width: 100%;
+  }
+  .layer-title {
+    font-size: 10pt;
+    font-weight: 700;
+    margin: 0 0 1mm 2mm;
+    display: flex;
+    align-items: baseline;
+    gap: 3mm;
+  }
+  .layer-title .desc {
+    font-size: 8pt;
+    font-weight: 400;
+    color: var(--muted);
+  }
+
+  /* The keyboard grid: 15 columns (7 + gap + 7), key = 15mm wide. */
+  .kb {
+    display: grid;
+    grid-template-columns: repeat(7, 15mm) 5mm repeat(7, 15mm);
+    gap: 0.8mm;
+    justify-content: center;
+  }
+
+  .key {
+    box-sizing: border-box;
+    height: 11mm;
+    border: 0.5px solid var(--key-border);
+    border-radius: 1.2mm;
+    background: var(--key-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 7pt;
+    line-height: 1.05;
+    padding: 0 0.5mm;
+    word-break: break-word;
+  }
+  .key.gap { border: none; background: transparent; }
+  .key.trans { background: var(--key-trans); color: #999; }
+  .key.none  { background: var(--key-none); color: #ccc; }
+  .key.mod   { background: var(--key-mod); font-weight: 600; }
+  .key.layer { background: var(--key-layer); font-weight: 600; }
+  .key.mouse { background: var(--key-mouse); font-weight: 600; }
+  .key.media { background: var(--key-media); font-weight: 600; }
+  .key.bt    { background: var(--key-bt); }
+  .key.sys   { background: var(--key-sys); font-weight: 600; }
+
+  /* Thumb clusters: position via grid columns. Match .kb dimensions. */
+  .thumbs {
+    display: grid;
+    grid-template-columns: repeat(7, 15mm) 5mm repeat(7, 15mm);
+    gap: 0.8mm;
+    justify-content: center;
+    margin-top: 0.8mm;
+  }
+
+  /* Per-row positioning helpers — column-start uses 1-based grid lines. */
+  /* Layout columns:  1..7 left main | 8 gap | 9..15 right main */
+  .arrow-row .key:nth-child(1) { grid-column: 3; }     /* RC(5,2) */
+  .arrow-row .key:nth-child(2) { grid-column: 4; }     /* RC(5,3) */
+  .arrow-row .key:nth-child(3) { grid-column: 12; }    /* RC(5,10) */
+  .arrow-row .key:nth-child(4) { grid-column: 13; }    /* RC(5,11) */
+
+  .top-thumb-row .key:nth-child(1) { grid-column: 5; } /* RC(5,4) */
+  .top-thumb-row .key:nth-child(2) { grid-column: 6; } /* RC(5,5) */
+  .top-thumb-row .key:nth-child(3) { grid-column: 7; } /* RC(5,6) */
+  .top-thumb-row .key:nth-child(4) { grid-column: 9; } /* RC(5,7) */
+  .top-thumb-row .key:nth-child(5) { grid-column: 10;} /* RC(5,8) */
+  .top-thumb-row .key:nth-child(6) { grid-column: 11;} /* RC(5,9) */
+
+  .bot-thumb-row .key:nth-child(1) { grid-column: 6; } /* RC(5,0) */
+  .bot-thumb-row .key:nth-child(2) { grid-column: 7; } /* RC(5,1) */
+  .bot-thumb-row .key:nth-child(3) { grid-column: 9; } /* RC(5,12) */
+  .bot-thumb-row .key:nth-child(4) { grid-column: 10;} /* RC(5,13) */
+
+  .legend {
+    width: 240mm;
+    max-width: 100%;
+    margin: 1mm auto 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3mm;
+    font-size: 7pt;
+    color: #555;
+    justify-content: center;
+  }
+  .legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 1mm;
+  }
+  .swatch {
+    width: 3mm; height: 3mm; border-radius: 0.5mm;
+    border: 0.5px solid var(--key-border);
+    display: inline-block;
+  }
+  .footer {
+    width: 240mm;
+    max-width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    color: var(--muted);
+    font-size: 7pt;
+    margin-top: 2mm;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================ PAGE 1 ============================ -->
+<section class="page">
+  <h1>Full Cosmotyl — Keymap Cheatsheet <small>(Page 1 of 2)</small></h1>
+
+  <!-- ===================== MAIN ===================== -->
+  <div class="layer">
+    <div class="layer-title">MAIN <span class="desc">base layer · QWERTY · split with arrows on inner thumbs</span></div>
+    <div class="kb">
+      <!-- Row 0 -->
+      <div class="key mod">Esc</div><div class="key">F1</div><div class="key">F2</div><div class="key">F3</div><div class="key">F4</div><div class="key">F5</div><div class="key">F6</div>
+      <div class="key gap"></div>
+      <div class="key">F7</div><div class="key">F8</div><div class="key">F9</div><div class="key">F10</div><div class="key">F11</div><div class="key">F12</div><div class="key layer">tog<br>ADJ</div>
+      <!-- Row 1 -->
+      <div class="key">`</div><div class="key">1</div><div class="key">2</div><div class="key">3</div><div class="key">4</div><div class="key">5</div><div class="key">6</div>
+      <div class="key gap"></div>
+      <div class="key">7</div><div class="key">8</div><div class="key">9</div><div class="key">0</div><div class="key">-</div><div class="key">=</div><div class="key layer">tog<br>SYM</div>
+      <!-- Row 2 -->
+      <div class="key mod">Tab</div><div class="key">Q</div><div class="key">W</div><div class="key">E</div><div class="key">R</div><div class="key">T</div><div class="key">PgUp</div>
+      <div class="key gap"></div>
+      <div class="key">Home</div><div class="key">Y</div><div class="key">U</div><div class="key">I</div><div class="key">O</div><div class="key">P</div><div class="key layer">tog<br>MED</div>
+      <!-- Row 3 -->
+      <div class="key mod">Shft<br><small>2×Caps</small></div><div class="key">A</div><div class="key">S</div><div class="key">D</div><div class="key">F</div><div class="key">G</div><div class="key">PgDn</div>
+      <div class="key gap"></div>
+      <div class="key">End</div><div class="key">H</div><div class="key">J</div><div class="key">K</div><div class="key">L</div><div class="key">;</div><div class="key mod">Shft<br><small>2×Caps</small></div>
+      <!-- Row 4 -->
+      <div class="key mod">Ctrl</div><div class="key">Z</div><div class="key">X</div><div class="key">C</div><div class="key">V</div><div class="key">B</div><div class="key layer">mo<br>SYM</div>
+      <div class="key gap"></div>
+      <div class="key layer">mo<br>MED</div><div class="key">N</div><div class="key">M</div><div class="key">,</div><div class="key">.</div><div class="key">/</div><div class="key mod">Ctrl</div>
+    </div>
+    <!-- Thumb cluster -->
+    <div class="thumbs arrow-row">
+      <div class="key">←</div><div class="key">→</div><div class="key">↓</div><div class="key">↑</div>
+    </div>
+    <div class="thumbs top-thumb-row">
+      <div class="key mod">Space</div><div class="key mod">Bksp</div><div class="key">NUHS</div>
+      <div class="key">Ins</div><div class="key">Del</div><div class="key mod">Enter</div>
+    </div>
+    <div class="thumbs bot-thumb-row">
+      <div class="key mod">LAlt</div><div class="key mod">LGui</div><div class="key mod">RGui</div><div class="key mod">RAlt</div>
+    </div>
+  </div>
+
+  <!-- ===================== SYMNUM ===================== -->
+  <div class="layer">
+    <div class="layer-title">SYMNUM <span class="desc">symbols + numpad · CAPS at left shift · numpad over right hand</span></div>
+    <div class="kb">
+      <!-- Row 0 -->
+      <div class="key trans">▽</div><div class="key">!</div><div class="key">@</div><div class="key">#</div><div class="key">$</div><div class="key">%</div><div class="key">^</div>
+      <div class="key gap"></div>
+      <div class="key">&amp;</div><div class="key">*</div><div class="key">(</div><div class="key">)</div><div class="key">-</div><div class="key">=</div><div class="key trans">▽</div>
+      <!-- Row 1 -->
+      <div class="key mod">Caps</div><div class="key none">·</div><div class="key none">·</div><div class="key">?</div><div class="key">;</div><div class="key">:</div><div class="key">`</div>
+      <div class="key gap"></div>
+      <div class="key">Num<br>Lock</div><div class="key">KP /</div><div class="key">KP *</div><div class="key">KP -</div><div class="key none">·</div><div class="key none">·</div><div class="key trans">▽</div>
+      <!-- Row 2 -->
+      <div class="key trans">▽</div><div class="key none">·</div><div class="key none">·</div><div class="key">|</div><div class="key">{</div><div class="key">}</div><div class="key">'</div>
+      <div class="key gap"></div>
+      <div class="key">KP 7</div><div class="key">KP 8</div><div class="key">KP 9</div><div class="key">KP +</div><div class="key none">·</div><div class="key none">·</div><div class="key trans">▽</div>
+      <!-- Row 3 -->
+      <div class="key trans">▽</div><div class="key none">·</div><div class="key none">·</div><div class="key">~</div><div class="key">(</div><div class="key">)</div><div class="key">"</div>
+      <div class="key gap"></div>
+      <div class="key">KP 4</div><div class="key">KP 5</div><div class="key">KP 6</div><div class="key">KP .</div><div class="key">KP ,</div><div class="key none">·</div><div class="key trans">▽</div>
+      <!-- Row 4 -->
+      <div class="key trans">▽</div><div class="key none">·</div><div class="key">\</div><div class="key">/</div><div class="key">[</div><div class="key">]</div><div class="key">#</div>
+      <div class="key gap"></div>
+      <div class="key">KP 1</div><div class="key">KP 2</div><div class="key">KP 3</div><div class="key">KP 0</div><div class="key none">·</div><div class="key layer">tog<br>MAIN</div><div class="key trans">▽</div>
+    </div>
+    <div class="thumbs arrow-row">
+      <div class="key trans">▽</div><div class="key trans">▽</div><div class="key trans">▽</div><div class="key trans">▽</div>
+    </div>
+    <div class="thumbs top-thumb-row">
+      <div class="key trans">▽</div><div class="key trans">▽</div><div class="key layer">mo<br>MED</div>
+      <div class="key layer">mo<br>MAIN</div><div class="key trans">▽</div><div class="key">KP<br>Enter</div>
+    </div>
+    <div class="thumbs bot-thumb-row">
+      <div class="key trans">▽</div><div class="key trans">▽</div><div class="key trans">▽</div><div class="key trans">▽</div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span><span class="swatch" style="background:var(--key-mod)"></span> modifier</span>
+    <span><span class="swatch" style="background:var(--key-layer)"></span> layer</span>
+    <span><span class="swatch" style="background:var(--key-trans)"></span> ▽ trans (falls through)</span>
+    <span><span class="swatch" style="background:var(--key-none)"></span> · none</span>
+    <span>Shift = tap-dance: tap = Shift, double-tap = CapsLock</span>
+  </div>
+</section>
+
+<!-- ============================ PAGE 2 ============================ -->
+<section class="page">
+  <h1>Full Cosmotyl — Keymap Cheatsheet <small>(Page 2 of 2)</small></h1>
+
+  <!-- ===================== MEDIA ===================== -->
+  <div class="layer">
+    <div class="layer-title">MEDIA <span class="desc">brightness/volume on number row · media playback on Y/U/I · Print Screen on P · mouse on S/D/F + H/J/K/L · scroll on N/M/,/. row</span></div>
+    <div class="kb">
+      <!-- Row 0 -->
+      <div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div>
+      <div class="key gap"></div>
+      <div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key trans">▽</div>
+      <!-- Row 1 -->
+      <div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div>
+      <div class="key gap"></div>
+      <div class="key media">Bri −</div><div class="key media">Bri +</div><div class="key media">Vol −</div><div class="key media">Vol +</div><div class="key media">Mute</div><div class="key none">·</div><div class="key trans">▽</div>
+      <!-- Row 2 -->
+      <div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div>
+      <div class="key gap"></div>
+      <div class="key none">·</div><div class="key media">Prev</div><div class="key media">Play /<br>Pause</div><div class="key media">Next</div><div class="key none">·</div><div class="key media">Print<br>Scrn</div><div class="key trans">▽</div>
+      <!-- Row 3 -->
+      <div class="key none">·</div><div class="key none">·</div><div class="key mouse">L<br>Click</div><div class="key mouse">M<br>Click</div><div class="key mouse">R<br>Click</div><div class="key none">·</div><div class="key none">·</div>
+      <div class="key gap"></div>
+      <div class="key none">·</div><div class="key mouse">M ←</div><div class="key mouse">M ↓</div><div class="key mouse">M ↑</div><div class="key mouse">M →</div><div class="key none">·</div><div class="key none">·</div>
+      <!-- Row 4 -->
+      <div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div>
+      <div class="key gap"></div>
+      <div class="key none">·</div><div class="key mouse">Scr ←</div><div class="key mouse">Scr ↓</div><div class="key mouse">Scr ↑</div><div class="key mouse">Scr →</div><div class="key trans">▽</div><div class="key none">·</div>
+    </div>
+    <div class="thumbs arrow-row">
+      <div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div>
+    </div>
+    <div class="thumbs top-thumb-row">
+      <div class="key none">·</div><div class="key none">·</div><div class="key none">·</div>
+      <div class="key none">·</div><div class="key none">·</div><div class="key none">·</div>
+    </div>
+    <div class="thumbs bot-thumb-row">
+      <div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div>
+    </div>
+  </div>
+
+  <!-- ===================== ADJUST ===================== -->
+  <div class="layer">
+    <div class="layer-title">ADJUST <span class="desc">Bluetooth · USB/BLE output · system reset · bootloader · Studio</span></div>
+    <div class="kb">
+      <!-- Row 0 -->
+      <div class="key bt">BT<br>Clear</div><div class="key bt">BT 0</div><div class="key bt">BT 1</div><div class="key bt">BT 2</div><div class="key bt">BT 3</div><div class="key bt">BT 4</div><div class="key bt">Out<br>USB</div>
+      <div class="key gap"></div>
+      <div class="key sys">Sys<br>Reset</div><div class="key none">·</div><div class="key none">·</div><div class="key sys">Ext<br>Pwr</div><div class="key sys">Soft<br>Off</div><div class="key none">·</div><div class="key trans">▽</div>
+      <!-- Row 1 -->
+      <div class="key none">·</div><div class="key bt">BT<br>Disc 0</div><div class="key bt">BT<br>Disc 1</div><div class="key bt">BT<br>Disc 2</div><div class="key bt">BT<br>Disc 3</div><div class="key bt">BT<br>Disc 4</div><div class="key bt">Out<br>BLE</div>
+      <div class="key gap"></div>
+      <div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key trans">▽</div>
+      <!-- Row 2 -->
+      <div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div>
+      <div class="key gap"></div>
+      <div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key trans">▽</div>
+      <!-- Row 3 -->
+      <div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div>
+      <div class="key gap"></div>
+      <div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div>
+      <!-- Row 4 -->
+      <div class="key sys">Studio<br>Unlock</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key sys">Boot<br>loader</div>
+      <div class="key gap"></div>
+      <div class="key sys">Boot<br>loader</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key trans">▽</div><div class="key none">·</div>
+    </div>
+    <div class="thumbs arrow-row">
+      <div class="key none">·</div><div class="key none">·</div><div class="key none">·</div><div class="key none">·</div>
+    </div>
+    <div class="thumbs top-thumb-row">
+      <div class="key none">·</div><div class="key none">·</div><div class="key none">·</div>
+      <div class="key none">·</div><div class="key none">·</div><div class="key none">·</div>
+    </div>
+    <div class="thumbs bot-thumb-row">
+      <div class="key bt">BT<br>Prev</div><div class="key bt">BT<br>Next</div><div class="key none">·</div><div class="key none">·</div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span><span class="swatch" style="background:var(--key-media)"></span> media / system</span>
+    <span><span class="swatch" style="background:var(--key-mouse)"></span> mouse / scroll</span>
+    <span><span class="swatch" style="background:var(--key-bt)"></span> bluetooth</span>
+    <span><span class="swatch" style="background:var(--key-sys)"></span> boot / reset</span>
+    <span><span class="swatch" style="background:var(--key-trans)"></span> ▽ trans</span>
+    <span><span class="swatch" style="background:var(--key-none)"></span> · none</span>
+  </div>
+
+  <div class="footer">
+    Layer access · MAIN→SYM: <b>tog SYM</b> on top-right (=) · MAIN→MED: <b>tog MED</b> on top-right (P) · MAIN→ADJ: <b>tog ADJ</b> on top-right (F12) ·
+    momentary <b>mo SYM / mo MED</b> on inner thumb keys (B / N row).
+  </div>
+</section>
+
+</body>
+</html>
