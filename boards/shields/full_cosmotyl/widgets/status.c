@@ -33,11 +33,13 @@
 #include <zephyr/logging/log.h>
 LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 
+#include <zmk/activity.h>
 #include <zmk/battery.h>
 #include <zmk/ble.h>
 #include <zmk/display.h>
 #include <zmk/endpoints.h>
 #include <zmk/event_manager.h>
+#include <zmk/events/activity_state_changed.h>
 #include <zmk/events/battery_state_changed.h>
 #include <zmk/events/ble_active_profile_changed.h>
 #include <zmk/events/endpoint_changed.h>
@@ -114,6 +116,11 @@ static void draw_bat(lv_obj_t *widget, lv_color_t cbuf[], const struct status_st
 
     lv_canvas_draw_rect(canvas, 0, 0, CANVAS_SIZE, CANVAS_SIZE, &rect_bg);
 
+    if (!state->active) {
+        rotate_canvas(canvas, cbuf);
+        return;
+    }
+
     /* nice_nano_v2 doesn't route the charger STAT pin to a GPIO, so
      * state->charging really means "USB is providing power to the board".
      * Under 97% we render a "+" after the left battery as a charging hint;
@@ -151,6 +158,11 @@ static void draw_middle(lv_obj_t *widget, lv_color_t cbuf[], const struct status
 
     lv_canvas_draw_rect(canvas, 0, 0, CANVAS_SIZE, CANVAS_SIZE, &rect_bg);
 
+    if (!state->active) {
+        rotate_canvas(canvas, cbuf);
+        return;
+    }
+
     /* Top half: endpoint + profile. "USB" when the USB endpoint is selected;
      * "BT n" (1-indexed) for BLE regardless of whether the profile is
      * currently connected. */
@@ -184,6 +196,11 @@ static void draw_hid(lv_obj_t *widget, lv_color_t cbuf[], const struct status_st
     init_label_dsc(&label_big, LVGL_FOREGROUND, &lv_font_montserrat_20, LV_TEXT_ALIGN_CENTER);
 
     lv_canvas_draw_rect(canvas, 0, 0, CANVAS_SIZE, CANVAS_SIZE, &rect_bg);
+
+    if (!state->active) {
+        rotate_canvas(canvas, cbuf);
+        return;
+    }
 
     /* One line per lock. Each ~20 px tall, 22 px stride → 66 px total, fits
      * in 68. Line only drawn when the matching host LED is reported on. */
@@ -355,6 +372,41 @@ ZMK_DISPLAY_WIDGET_LISTENER(widget_hid_indicators_status, struct hid_indicators_
                             hid_indicators_update_cb, hid_indicators_get_state)
 ZMK_SUBSCRIPTION(widget_hid_indicators_status, zmk_hid_indicators_changed);
 
+/* ---------- activity state (sleep/wake) ---------- */
+
+/* Tracks ZMK's activity state so the widget can blank all three canvases when
+ * the keyboard goes IDLE (or SLEEP) and repaint them on return to ACTIVE.
+ * This is how we implement a display sleep at the widget level — the stock
+ * CONFIG_ZMK_DISPLAY_BLANK_ON_IDLE path can't physically power the panel down
+ * on nice_nano_v2 (DISP_EN isn't wired) and would only stop the LVGL tick
+ * loop, which we need running so that the wake redraw actually flushes. */
+struct activity_status_state {
+    bool active;
+};
+
+static void set_activity_status(struct zmk_widget_status *widget,
+                                struct activity_status_state state) {
+    widget->state.active = state.active;
+    draw_bat(widget->obj, widget->cbuf3, &widget->state);
+    draw_middle(widget->obj, widget->cbuf2, &widget->state);
+    draw_hid(widget->obj, widget->cbuf, &widget->state);
+}
+
+static void activity_status_update_cb(struct activity_status_state state) {
+    struct zmk_widget_status *widget;
+    SYS_SLIST_FOR_EACH_CONTAINER(&widgets, widget, node) { set_activity_status(widget, state); }
+}
+
+static struct activity_status_state activity_status_get_state(const zmk_event_t *eh) {
+    const struct zmk_activity_state_changed *ev = as_zmk_activity_state_changed(eh);
+    enum zmk_activity_state s = ev ? ev->state : zmk_activity_get_state();
+    return (struct activity_status_state){.active = (s == ZMK_ACTIVITY_ACTIVE)};
+}
+
+ZMK_DISPLAY_WIDGET_LISTENER(widget_activity_status, struct activity_status_state,
+                            activity_status_update_cb, activity_status_get_state)
+ZMK_SUBSCRIPTION(widget_activity_status, zmk_activity_state_changed);
+
 /* ---------- init ---------- */
 
 int zmk_widget_status_init(struct zmk_widget_status *widget, lv_obj_t *parent) {
@@ -380,6 +432,10 @@ int zmk_widget_status_init(struct zmk_widget_status *widget, lv_obj_t *parent) {
 
     sys_slist_append(&widgets, &widget->node);
 
+    /* Default to active so the first render paints actual content — the
+     * activity listener init below will overwrite this with the real state. */
+    widget->state.active = true;
+
     /* Force a first render of every canvas with the widget's zero-initialised
      * state before the event listeners hook up. This guarantees every pixel
      * on the screen gets written at least once, refreshing the Sharp
@@ -395,6 +451,7 @@ int zmk_widget_status_init(struct zmk_widget_status *widget, lv_obj_t *parent) {
     widget_output_status_init();
     widget_layer_status_init();
     widget_hid_indicators_status_init();
+    widget_activity_status_init();
 
     return 0;
 }

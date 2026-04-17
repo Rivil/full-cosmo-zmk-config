@@ -40,6 +40,10 @@ struct status_state {
 
     /* HID LED indicators (bit flags per USB HID keyboard LED report) */
     uint8_t hid_indicators;
+
+    /* True while the keyboard is in ACTIVE activity state. When it drops to
+     * IDLE / SLEEP we blank the canvases so the display looks powered-off. */
+    bool active;
 };
 
 struct battery_status_state {
