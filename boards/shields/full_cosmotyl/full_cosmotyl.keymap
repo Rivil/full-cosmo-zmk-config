@@ -39,7 +39,7 @@
             //                                           |    SPC  |   BSPC   |    NUHS   |             |  INS    |  DEL     |   ENTER  |
             //                                                     |   LALT   |    LGUI   |             | UP ARR  | DOWN ARR |
             bindings = <
-                &kp ESC    &kp F1 &kp F2      &kp F3      &kp F4    &kp F5     &kp F6                   &kp F7     &kp F8   &kp F9     &kp F10   &mkp LCLK  &mmv MOVE_LEFT &tog ADJUST
+                &kp ESC    &kp F1 &kp F2      &kp F3      &kp F4    &kp F5     &kp F6                   &kp F7     &kp F8   &kp F9     &kp F10   &kp F11    &kp F12    &tog ADJUST
                 &kp GRAVE  &kp N1 &kp N2      &kp N3      &kp N4    &kp N5     &kp N6                   &kp N7     &kp N8   &kp N9     &kp N0    &kp MINUS  &kp EQUAL  &tog SYMNUM
                 &kp TAB    &kp Q  &kp W       &kp E       &kp R     &kp T      &kp PG_UP                &kp HOME   &kp Y    &kp U      &kp I     &kp O      &kp P      &tog MEDIA
                 &td_caps   &kp A  &kp S       &kp D       &kp F     &kp G      &kp PG_DN                &kp END    &kp H    &kp J      &kp K     &kp L      &kp SEMI   &td_caps
