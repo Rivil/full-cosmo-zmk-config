@@ -27,14 +27,3 @@
         , <&pro_micro 5 (GPIO_PULL_DOWN | GPIO_ACTIVE_HIGH)>
         , <&pro_micro 4 (GPIO_PULL_DOWN | GPIO_ACTIVE_HIGH)>;
 };
-
-/* The Sharp LS0xx memory-in-pixel LCD needs VCOM polarity toggled every ~1s
- * to prevent the image from fading. nice_view's stock overlay doesn't wire
- * EXTCOMIN to a GPIO on this board, so without serial-vcom-inversion the
- * driver never toggles VCOM and the display appears to "go to sleep" (really,
- * it just fades) after a minute or so of no LVGL redraws. Turning on serial
- * inversion makes the driver fire periodic SPI commands on its own thread. */
-&nice_view {
-    serial-vcom-inversion;
-    serial-vcom-interval = <1000>;
-};
