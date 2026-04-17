@@ -3,23 +3,29 @@
  *
  * Custom nice!view status widget for full_cosmotyl, central side only.
  *
- * Layout (top-to-bottom as the user sees the mounted display):
- *   Top canvas    : left battery (icon + number), right battery (icon + number)
- *   Middle canvas : endpoint + BT profile (large), active layer name
- *   Bottom canvas : HID LED indicators on one line — "C N S" with each letter
- *                   drawn only while the matching host LED is on
+ * Physical layout of the three internal 68x68 canvases:
+ *   * Child 0 ("top") at widget (92, 0)  — 68x68 buffer, visible as-is.
+ *   * Child 1 ("middle") at widget (24, 0) — 68x68.
+ *   * Child 2 ("bottom") at widget (-44, 0) — 68x68 buffer positioned so only
+ *     the last 24 canvas columns are inside the 160x68 widget.
  *
- * Implementation notes:
- *   * Each 68x68 canvas is drawn in its own LVGL coord space and then rotated
- *     90° by rotate_canvas() to match the physical display mounting. x/y
- *     values below are canvas (pre-rotation) coordinates.
- *   * Battery percentages are rendered without a '%' suffix — 14pt montserrat
- *     is too wide to fit "100%" in the 32px text box we have, and LVGL
- *     silently wraps, making the '%' appear on a second line.
- *   * The widget init forces an explicit initial draw of all three canvases.
- *     Event-driven listeners do fire at init, but for completeness (and to
- *     scrub stale memory-in-pixel LCD content from prior firmware) we draw
- *     everything once here regardless.
+ * How this maps to what the user sees on the mounted display:
+ *
+ *    USER'S TOP     <-- child 2 (only ~24 px tall in the user's vertical)
+ *       …
+ *    USER'S MIDDLE  <-- child 1 (68 px tall)
+ *       …
+ *    USER'S BOTTOM  <-- child 0 (68 px tall)
+ *
+ * Content assignment (driven by user feedback — we want the CAPS/NUM/SCR
+ * indicators in the big slot, batteries can live in the thin top strip):
+ *   * child 2 (user's top, 24 px):   compact battery readout "L85 R72"
+ *   * child 1 (user's middle, 68 px): endpoint+profile (large), layer name
+ *   * child 0 (user's bottom, 68 px): HID LED indicators, one per row, big font
+ *
+ * x/y values in the draw_* functions below are canvas (pre-rotation)
+ * coordinates. Each canvas is rotated 90° by rotate_canvas() before it
+ * lands on the widget.
  */
 
 #include <zephyr/kernel.h>
@@ -49,6 +55,11 @@ LOG_MODULE_DECLARE(zmk, CONFIG_ZMK_LOG_LEVEL);
 #define HID_LED_CAPS   0x02
 #define HID_LED_SCROLL 0x04
 
+/* Canvas child indices — see header comment. */
+#define CANVAS_HID     0
+#define CANVAS_MIDDLE  1
+#define CANVAS_BAT     2
+
 static sys_slist_t widgets = SYS_SLIST_STATIC_INIT(&widgets);
 
 struct output_status_state {
@@ -67,7 +78,7 @@ struct hid_indicators_state {
     uint8_t indicators;
 };
 
-/* A flag propagated from peripheral_battery_get_state so we only mark the
+/* Flag propagated from peripheral_battery_get_state so we only mark the
  * peripheral level as "valid" when it came from an actual event. The
  * ZMK_DISPLAY_WIDGET_LISTENER init path calls get_state() with eh=NULL to do
  * the first draw; without this flag we'd render "0%" from that synthetic call
@@ -80,51 +91,56 @@ struct peripheral_battery_event_state {
 
 /* ---------- drawing ---------- */
 
-static void draw_top(lv_obj_t *widget, lv_color_t cbuf[], const struct status_state *state) {
-    lv_obj_t *canvas = lv_obj_get_child(widget, 0);
+/* Formats one battery into a 2-char buffer (plus NUL). Caps at 99 to keep
+ * the compact top line under the 68px canvas width — the "+1%" precision lost
+ * when the cell is actually at 100 is not worth the extra digit. */
+static void format_battery_2(char out[3], uint8_t level, bool valid, bool full) {
+    if (!valid) {
+        strcpy(out, "--");
+    } else if (full) {
+        strcpy(out, "FL");
+    } else {
+        snprintf(out, 3, "%2u", level > 99 ? 99 : level);
+    }
+}
+
+static void draw_bat(lv_obj_t *widget, lv_color_t cbuf[], const struct status_state *state) {
+    lv_obj_t *canvas = lv_obj_get_child(widget, CANVAS_BAT);
 
     lv_draw_rect_dsc_t rect_bg;
     init_rect_dsc(&rect_bg, LVGL_BACKGROUND);
     lv_draw_label_dsc_t label_small;
-    init_label_dsc(&label_small, LVGL_FOREGROUND, &lv_font_montserrat_14, LV_TEXT_ALIGN_LEFT);
+    init_label_dsc(&label_small, LVGL_FOREGROUND, &lv_font_montserrat_14, LV_TEXT_ALIGN_CENTER);
 
     lv_canvas_draw_rect(canvas, 0, 0, CANVAS_SIZE, CANVAS_SIZE, &rect_bg);
 
-    /* Left (central) battery row.
-     * nice_nano_v2 doesn't route the charger STAT pin to a GPIO, so
+    /* nice_nano_v2 doesn't route the charger STAT pin to a GPIO, so
      * state->charging really means "USB is providing power to the board".
-     * We split that into two visual states by level: under 97% → bolt
-     * overlay ("still charging"); at/above 97% → "FULL" text ("topped off").
-     * On battery, just the number with no overlay.
-     * '%' is intentionally dropped — it wouldn't fit in 32px and caused
-     * silent text-wrapping in an earlier version. */
-    bool usb_full = state->charging && state->battery >= 97;
-    bool usb_charging = state->charging && !usb_full;
-    draw_battery_icon(canvas, 0, 22, state->battery, usb_charging);
-    char lbat[6];
-    if (usb_full) {
-        snprintf(lbat, sizeof(lbat), "FULL");
-    } else {
-        snprintf(lbat, sizeof(lbat), "%3d", state->battery);
-    }
-    lv_canvas_draw_text(canvas, 38, 22, 30, &label_small, lbat);
+     * Under 97% we render a "+" after the left battery as a charging hint;
+     * at/above 97% we show "FL" (full). */
+    bool full = state->charging && state->battery >= 97;
+    bool charging = state->charging && !full;
 
-    /* Right (peripheral) battery row */
-    draw_battery_icon(canvas, 0, 44,
-                      state->peripheral_battery_valid ? state->peripheral_battery : 0, false);
-    char rbat[6];
-    if (state->peripheral_battery_valid) {
-        snprintf(rbat, sizeof(rbat), "%3d", state->peripheral_battery);
+    char lbuf[3], rbuf[3];
+    format_battery_2(lbuf, state->battery, true, full);
+    format_battery_2(rbuf, state->peripheral_battery, state->peripheral_battery_valid, false);
+
+    char line[16];
+    if (charging) {
+        /* "L85+R72" — drop the space between halves to make room for the
+         * charging hint while keeping the whole line under 68px. */
+        snprintf(line, sizeof(line), "L%s+R%s", lbuf, rbuf);
     } else {
-        snprintf(rbat, sizeof(rbat), " --");
+        snprintf(line, sizeof(line), "L%s  R%s", lbuf, rbuf);
     }
-    lv_canvas_draw_text(canvas, 38, 44, 30, &label_small, rbat);
+
+    lv_canvas_draw_text(canvas, 0, 5, CANVAS_SIZE, &label_small, line);
 
     rotate_canvas(canvas, cbuf);
 }
 
 static void draw_middle(lv_obj_t *widget, lv_color_t cbuf[], const struct status_state *state) {
-    lv_obj_t *canvas = lv_obj_get_child(widget, 1);
+    lv_obj_t *canvas = lv_obj_get_child(widget, CANVAS_MIDDLE);
 
     lv_draw_rect_dsc_t rect_bg;
     init_rect_dsc(&rect_bg, LVGL_BACKGROUND);
@@ -135,9 +151,9 @@ static void draw_middle(lv_obj_t *widget, lv_color_t cbuf[], const struct status
 
     lv_canvas_draw_rect(canvas, 0, 0, CANVAS_SIZE, CANVAS_SIZE, &rect_bg);
 
-    /* Top half: endpoint + profile. "USB" for the USB endpoint; "BT n" (1-indexed)
-     * for BLE, regardless of connection state — the fact we're showing a BT
-     * profile at all says a slot is selected. */
+    /* Top half: endpoint + profile. "USB" when the USB endpoint is selected;
+     * "BT n" (1-indexed) for BLE regardless of whether the profile is
+     * currently connected. */
     char ep[8];
     if (state->selected_endpoint.transport == ZMK_TRANSPORT_USB) {
         snprintf(ep, sizeof(ep), "USB");
@@ -146,7 +162,7 @@ static void draw_middle(lv_obj_t *widget, lv_color_t cbuf[], const struct status
     }
     lv_canvas_draw_text(canvas, 0, 0, CANVAS_SIZE, &label_huge, ep);
 
-    /* Bottom half: layer name (or "L#" if the keymap didn't give it a label). */
+    /* Bottom half: layer name (or "L#" if the keymap didn't label it). */
     char layer[12];
     if (state->layer_label == NULL || strlen(state->layer_label) == 0) {
         snprintf(layer, sizeof(layer), "L%u", state->layer_index);
@@ -159,33 +175,27 @@ static void draw_middle(lv_obj_t *widget, lv_color_t cbuf[], const struct status
     rotate_canvas(canvas, cbuf);
 }
 
-static void draw_bottom(lv_obj_t *widget, lv_color_t cbuf[], const struct status_state *state) {
-    lv_obj_t *canvas = lv_obj_get_child(widget, 2);
+static void draw_hid(lv_obj_t *widget, lv_color_t cbuf[], const struct status_state *state) {
+    lv_obj_t *canvas = lv_obj_get_child(widget, CANVAS_HID);
 
     lv_draw_rect_dsc_t rect_bg;
     init_rect_dsc(&rect_bg, LVGL_BACKGROUND);
-    lv_draw_label_dsc_t label_mid;
-    init_label_dsc(&label_mid, LVGL_FOREGROUND, &lv_font_montserrat_16, LV_TEXT_ALIGN_CENTER);
+    lv_draw_label_dsc_t label_big;
+    init_label_dsc(&label_big, LVGL_FOREGROUND, &lv_font_montserrat_20, LV_TEXT_ALIGN_CENTER);
 
     lv_canvas_draw_rect(canvas, 0, 0, CANVAS_SIZE, CANVAS_SIZE, &rect_bg);
 
-    /* The bottom canvas is placed at widget (-44, 0), leaving only ~24px of
-     * width visible. We have room for one row of text — concatenate the
-     * active indicators with spaces between, e.g. "C N" when caps+num are on,
-     * "" when none are on. */
-    char line[8] = "";
+    /* One line per lock. Each ~20 px tall, 22 px stride → 66 px total, fits
+     * in 68. Line only drawn when the matching host LED is reported on. */
     if (state->hid_indicators & HID_LED_CAPS) {
-        strcat(line, "C");
+        lv_canvas_draw_text(canvas, 0, 2, CANVAS_SIZE, &label_big, "CAPS");
     }
     if (state->hid_indicators & HID_LED_NUM) {
-        if (line[0]) strcat(line, " ");
-        strcat(line, "N");
+        lv_canvas_draw_text(canvas, 0, 24, CANVAS_SIZE, &label_big, "NUM");
     }
     if (state->hid_indicators & HID_LED_SCROLL) {
-        if (line[0]) strcat(line, " ");
-        strcat(line, "S");
+        lv_canvas_draw_text(canvas, 0, 46, CANVAS_SIZE, &label_big, "SCR");
     }
-    lv_canvas_draw_text(canvas, 0, 5, CANVAS_SIZE, &label_mid, line);
 
     rotate_canvas(canvas, cbuf);
 }
@@ -198,7 +208,7 @@ static void set_battery_status(struct zmk_widget_status *widget,
     widget->state.charging = state.usb_present;
 #endif
     widget->state.battery = state.level;
-    draw_top(widget->obj, widget->cbuf, &widget->state);
+    draw_bat(widget->obj, widget->cbuf3, &widget->state);
 }
 
 static void battery_status_update_cb(struct battery_status_state state) {
@@ -233,7 +243,7 @@ static void set_peripheral_battery_status(struct zmk_widget_status *widget,
         widget->state.peripheral_battery = state.level;
         widget->state.peripheral_battery_valid = true;
     }
-    draw_top(widget->obj, widget->cbuf, &widget->state);
+    draw_bat(widget->obj, widget->cbuf3, &widget->state);
 }
 
 static void peripheral_battery_update_cb(struct peripheral_battery_event_state state) {
@@ -324,7 +334,7 @@ ZMK_SUBSCRIPTION(widget_layer_status, zmk_layer_state_changed);
 static void set_hid_indicators_status(struct zmk_widget_status *widget,
                                       struct hid_indicators_state state) {
     widget->state.hid_indicators = state.indicators;
-    draw_bottom(widget->obj, widget->cbuf3, &widget->state);
+    draw_hid(widget->obj, widget->cbuf, &widget->state);
 }
 
 static void hid_indicators_update_cb(struct hid_indicators_state state) {
@@ -351,28 +361,32 @@ int zmk_widget_status_init(struct zmk_widget_status *widget, lv_obj_t *parent) {
     widget->obj = lv_obj_create(parent);
     lv_obj_set_size(widget->obj, 160, 68);
 
-    lv_obj_t *top = lv_canvas_create(widget->obj);
-    lv_obj_align(top, LV_ALIGN_TOP_RIGHT, 0, 0);
-    lv_canvas_set_buffer(top, widget->cbuf, CANVAS_SIZE, CANVAS_SIZE, LV_IMG_CF_TRUE_COLOR);
+    /* Child 0 — at widget_x=92..160. Renders to the user's BOTTOM 68 px. */
+    lv_obj_t *hid_canvas = lv_canvas_create(widget->obj);
+    lv_obj_align(hid_canvas, LV_ALIGN_TOP_RIGHT, 0, 0);
+    lv_canvas_set_buffer(hid_canvas, widget->cbuf, CANVAS_SIZE, CANVAS_SIZE, LV_IMG_CF_TRUE_COLOR);
 
-    lv_obj_t *middle = lv_canvas_create(widget->obj);
-    lv_obj_align(middle, LV_ALIGN_TOP_LEFT, 24, 0);
-    lv_canvas_set_buffer(middle, widget->cbuf2, CANVAS_SIZE, CANVAS_SIZE, LV_IMG_CF_TRUE_COLOR);
+    /* Child 1 — at widget_x=24..92. Renders to the user's MIDDLE 68 px. */
+    lv_obj_t *middle_canvas = lv_canvas_create(widget->obj);
+    lv_obj_align(middle_canvas, LV_ALIGN_TOP_LEFT, 24, 0);
+    lv_canvas_set_buffer(middle_canvas, widget->cbuf2, CANVAS_SIZE, CANVAS_SIZE,
+                         LV_IMG_CF_TRUE_COLOR);
 
-    lv_obj_t *bottom = lv_canvas_create(widget->obj);
-    lv_obj_align(bottom, LV_ALIGN_TOP_LEFT, -44, 0);
-    lv_canvas_set_buffer(bottom, widget->cbuf3, CANVAS_SIZE, CANVAS_SIZE, LV_IMG_CF_TRUE_COLOR);
+    /* Child 2 — at widget_x=-44..24, only the last 24 canvas columns visible.
+     * Renders to the user's TOP ~24 px. */
+    lv_obj_t *bat_canvas = lv_canvas_create(widget->obj);
+    lv_obj_align(bat_canvas, LV_ALIGN_TOP_LEFT, -44, 0);
+    lv_canvas_set_buffer(bat_canvas, widget->cbuf3, CANVAS_SIZE, CANVAS_SIZE, LV_IMG_CF_TRUE_COLOR);
 
     sys_slist_append(&widgets, &widget->node);
 
     /* Force a first render of every canvas with the widget's zero-initialised
-     * state before we wire up the event listeners. This guarantees every
-     * pixel on the screen gets written at least once, which is what
-     * refreshes the Sharp memory-in-pixel LCD out of whatever it was showing
-     * before this firmware loaded. */
-    draw_top(widget->obj, widget->cbuf, &widget->state);
+     * state before the event listeners hook up. This guarantees every pixel
+     * on the screen gets written at least once, refreshing the Sharp
+     * memory-in-pixel LCD out of whatever the previous firmware wrote there. */
+    draw_hid(widget->obj, widget->cbuf, &widget->state);
     draw_middle(widget->obj, widget->cbuf2, &widget->state);
-    draw_bottom(widget->obj, widget->cbuf3, &widget->state);
+    draw_bat(widget->obj, widget->cbuf3, &widget->state);
 
     widget_battery_status_init();
 #if IS_ENABLED(CONFIG_ZMK_SPLIT_BLE_CENTRAL_BATTERY_LEVEL_FETCHING)
