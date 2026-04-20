@@ -256,13 +256,10 @@ ZMK_SUBSCRIPTION(widget_battery_status, zmk_usb_conn_state_changed);
 
 static void set_peripheral_battery_status(struct zmk_widget_status *widget,
                                           struct peripheral_battery_event_state state) {
-    /* Ignore level=0 events. ZMK's BAS path on the central side sometimes
-     * fires a 0-reading before the peripheral has taken a real sensor sample
-     * (or when a stale bond prevents the BAS characteristic from being
-     * re-read after discovery). Treating 0 as "no reading yet" avoids
-     * sticking the UI on a fake 0% — once a real >0 reading arrives we
-     * latch it, and we keep the last real reading across transient 0s. */
-    if (state.from_event && state.level > 0) {
+    /* DIAGNOSTIC: accept any from_event reading, including 0, so we can
+     * distinguish "events firing with level=0" (shows "R  0") from "no
+     * events at all" (stays "R --"). Revert after diagnosis. */
+    if (state.from_event) {
         widget->state.peripheral_battery = state.level;
         widget->state.peripheral_battery_valid = true;
     }
